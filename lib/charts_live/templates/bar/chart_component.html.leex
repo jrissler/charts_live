@@ -1,0 +1,15 @@
+<div class="lc-live-bar-component">
+  <figure>
+    <svg class="chart--hor-bar" aria-labelledby="chartTitle" role="group" width="100%" height="100%" viewBox="0 0 600 400" style="overflow: visible;">
+      <title id="chartTitle"><%= Chart.title(@chart) %></title>
+
+      <%= render "_bar_labels.html", chart: @chart %>
+      <%= x_axis_labels(@chart, @grid_lines, @offsetter) %>
+      <svg class="" width="90%" height="92%" x="10%" y="0">
+        <%= render "_bar_grid_lines.html", chart: @chart, grid_lines: @grid_lines, offsetter: @offsetter %>
+        <%= render "_bars.html", chart: @chart, bars: @bars %>
+      </svg>
+      <%= color_defs(@chart) %>
+    </svg>
+  </figure>
+</div>
