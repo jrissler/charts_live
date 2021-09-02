@@ -26,25 +26,6 @@ defmodule ChartsLive.StackedBarView do
     )
   end
 
-  defp x_axis_column_label(line, offsetter) do
-    content_tag(:svg,
-      x: "#{offsetter.(line)}%",
-      y: "0%",
-      height: "100%",
-      width: "20%",
-      style: "overflow: visible;"
-    ) do
-      content_tag(:svg, width: "100%", height: "100%", x: "0", y: "0") do
-        content_tag(:text, line,
-          x: "50%",
-          y: "50%",
-          alignment_baseline: "middle",
-          text_anchor: "middle"
-        )
-      end
-    end
-  end
-
   def legend(rectangles, colors) do
     legend_items =
       rectangles
@@ -72,5 +53,24 @@ defmodule ChartsLive.StackedBarView do
     atom_color
     |> Atom.to_string()
     |> String.capitalize()
+  end
+
+  defp x_axis_column_label(line, offsetter) do
+    content_tag(:svg,
+      x: "#{offsetter.(line)}%",
+      y: "0%",
+      height: "100%",
+      width: "20%",
+      style: "overflow: visible;"
+    ) do
+      content_tag(:svg, width: "100%", height: "100%", x: "0", y: "0") do
+        content_tag(:text, line,
+          x: "50%",
+          y: "50%",
+          alignment_baseline: "middle",
+          text_anchor: "middle"
+        )
+      end
+    end
   end
 end
