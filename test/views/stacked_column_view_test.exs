@@ -23,22 +23,24 @@ defmodule ChartsLive.StackedColumnViewTest do
     test "should return legend based on rectangles and colors" do
       rectangles = [
         %Rectangle{fill_color: :blueberry},
-        %Rectangle{fill_color: :apple}
+        %Rectangle{fill_color: :apple},
+        %Rectangle{fill_color: :orange}
       ]
 
       colors = %{
         blueberry: "#4096EE",
         apple: "#CC0000",
-        random: "#FF7400"
+        orange: "#FF7400",
+        random: "#FFF"
       }
 
       legend = safe_to_string(legend(rectangles, colors))
 
       assert legend ==
-               "<dl style=\"margin-left: 10%; float: right;\"><dt style=\"background-color: #CC0000; display: inline-block; height: 10px; width: 20px; vertical-align: middle;\"></dt><dd style=\"display: inline-block; margin: 0px 10px 0 6px; padding-bottom: 0;\">Apple</dd><dt style=\"background-color: #4096EE; display: inline-block; height: 10px; width: 20px; vertical-align: middle;\"></dt><dd style=\"display: inline-block; margin: 0px 10px 0 6px; padding-bottom: 0;\">Blueberry</dd></dl>"
+               "<dl style=\"margin-left: 10%; float: right;\"><dt style=\"background-color: #CC0000; display: inline-block; height: 10px; width: 20px; vertical-align: middle;\"></dt><dd style=\"display: inline-block; margin: 0px 10px 0 6px; padding-bottom: 0;\">Apple</dd><dt style=\"background-color: #4096EE; display: inline-block; height: 10px; width: 20px; vertical-align: middle;\"></dt><dd style=\"display: inline-block; margin: 0px 10px 0 6px; padding-bottom: 0;\">Blueberry</dd><dt style=\"background-color: #FF7400; display: inline-block; height: 10px; width: 20px; vertical-align: middle;\"></dt><dd style=\"display: inline-block; margin: 0px 10px 0 6px; padding-bottom: 0;\">Orange</dd></dl>"
 
       refute legend =~ "random"
-      refute legend =~ "#FF7400"
+      refute legend =~ "#FFF"
     end
   end
 end

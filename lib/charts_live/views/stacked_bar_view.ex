@@ -26,12 +26,13 @@ defmodule ChartsLive.StackedBarView do
     )
   end
 
+  # TODO: add to behavior, shared with stacked column
   def legend(rectangles, colors) do
     legend_items =
       rectangles
       |> Enum.map(& &1.fill_color)
       |> Enum.uniq()
-      |> Enum.reverse()
+      |> Enum.sort()
       |> Enum.map(&legend_content(&1, colors))
 
     content_tag(:dl, legend_items, style: "margin-left: 10%; float: right;")

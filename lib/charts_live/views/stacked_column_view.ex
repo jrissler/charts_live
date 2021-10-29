@@ -42,7 +42,7 @@ defmodule ChartsLive.StackedColumnView do
       rectangles
       |> Enum.map(& &1.fill_color)
       |> Enum.uniq()
-      |> Enum.reverse()
+      |> Enum.sort()
       |> Enum.map(&legend_content(&1, colors))
 
     content_tag(:dl, legend_items, style: "margin-left: 10%; float: right;")
