@@ -6,8 +6,11 @@ defmodule ChartsLive.StackedBarViewTest do
   import ChartsLive.StackedBarView
   import Phoenix.HTML, only: [safe_to_string: 1]
 
-  alias Charts.LineChart.Point
   alias Charts.BaseChart
+
+  test "viewbox_height/1 should return viewbox height" do
+    assert viewbox_height([1, 2]) == 96
+  end
 
   describe "x_axis_labels/2" do
     test "should return svg" do

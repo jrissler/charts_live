@@ -8,6 +8,10 @@ defmodule ChartsLive.StackedBarView do
   alias Charts.Gradient
   alias Charts.StackedColumnChart.Rectangle
 
+  def viewbox_height(rectangles) do
+    length(rectangles) * 16 + 64
+  end
+
   @doc """
   The function used to generate X Axis labels
   """
