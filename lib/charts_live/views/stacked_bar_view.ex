@@ -9,7 +9,7 @@ defmodule ChartsLive.StackedBarView do
   alias Charts.StackedColumnChart.Rectangle
 
   def viewbox_height(rectangles) do
-    length(rectangles) * 16 + 64
+    length(rectangles) * 16 + 170
   end
 
   @doc """
