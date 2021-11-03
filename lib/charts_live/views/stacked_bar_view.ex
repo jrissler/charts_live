@@ -9,7 +9,7 @@ defmodule ChartsLive.StackedBarView do
   alias Charts.StackedColumnChart.Rectangle
 
   def viewbox_height(rectangles) do
-    length(rectangles) * 16 + 170
+    length(rectangles) * 12 + 170
   end
 
   @doc """
@@ -21,10 +21,10 @@ defmodule ChartsLive.StackedBarView do
     content_tag(:svg, lines,
       id: svg_id(chart, "xlabels"),
       class: "lines__x-labels",
-      width: "90%",
+      width: "84%",
       height: "8%",
       y: "92%",
-      x: "1%",
+      x: "5%",
       style: "overflow: visible;",
       offset: "0"
     )
@@ -73,7 +73,7 @@ defmodule ChartsLive.StackedBarView do
           x: "50%",
           y: "50%",
           alignment_baseline: "middle",
-          text_anchor: "middle"
+          text_anchor: "start"
         )
       end
     end
