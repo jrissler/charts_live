@@ -9,7 +9,7 @@ defmodule ChartsLive.StackedBarViewTest do
   alias Charts.BaseChart
 
   test "viewbox_height/1 should return viewbox height" do
-    assert viewbox_height([1, 2]) == 96
+    assert viewbox_height([1, 2]) == 194
   end
 
   describe "x_axis_labels/2" do
@@ -19,7 +19,7 @@ defmodule ChartsLive.StackedBarViewTest do
       offsetter = fn grid_line -> 100 * grid_line / 2500 end
 
       assert safe_to_string(x_axis_labels(chart, grid_lines, offsetter)) ==
-               "<svg class=\"lines__x-labels\" height=\"8%\" id=\"a-title-xlabels\" offset=\"0\" style=\"overflow: visible;\" width=\"90%\" x=\"1%\" y=\"92%\"><svg height=\"100%\" style=\"overflow: visible;\" width=\"20%\" x=\"5.6%\" y=\"0%\"><svg height=\"100%\" width=\"100%\" x=\"0\" y=\"0\"><text alignment-baseline=\"middle\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">140</text></svg></svg><svg height=\"100%\" style=\"overflow: visible;\" width=\"20%\" x=\"11.2%\" y=\"0%\"><svg height=\"100%\" width=\"100%\" x=\"0\" y=\"0\"><text alignment-baseline=\"middle\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">280</text></svg></svg></svg>"
+               "<svg class=\"lines__x-labels\" height=\"8%\" id=\"a-title-xlabels\" offset=\"0\" style=\"overflow: visible;\" width=\"84%\" x=\"5%\" y=\"92%\"><svg height=\"100%\" style=\"overflow: visible;\" width=\"20%\" x=\"5.6%\" y=\"0%\"><svg height=\"100%\" width=\"100%\" x=\"0\" y=\"0\"><text alignment-baseline=\"middle\" text-anchor=\"start\" x=\"50%\" y=\"50%\">140</text></svg></svg><svg height=\"100%\" style=\"overflow: visible;\" width=\"20%\" x=\"11.2%\" y=\"0%\"><svg height=\"100%\" width=\"100%\" x=\"0\" y=\"0\"><text alignment-baseline=\"middle\" text-anchor=\"start\" x=\"50%\" y=\"50%\">280</text></svg></svg></svg>"
     end
   end
 
