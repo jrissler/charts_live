@@ -1,18 +1,18 @@
-<svg id"<%= svg_id(@chart, "results") %>" class="columns__results" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+<svg id={svg_id(@chart, "results")} class="columns__results" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
   <g>
     <%= for %Column{label: label, column_width: column_width, column_offset: column_offset, column_height: column_height, fill_color: fill_color} <- @columns do %>
-      <path id="<%= label %>"
+      <path id={label}
         class="column"
-        d="
-          M<%= column_offset %>,100
-          v-<%= column_height %>
+        d={"
+          M#{column_offset},100
+          v-#{column_height}
           q0,-2 2,-2
-          h<%=column_width / 2 %>
+          h#{column_width / 2}
           q2,0 2,2
-          v<%= column_height + 2 %>,
+          v#{column_height},
           z
-        "
-        fill="<%= color_to_fill(@chart.colors(), fill_color) %>"
+        "}
+        fill={color_to_fill(@chart.colors(), fill_color)}
         style="transition: all 1s ease;">
           <animate attributeName="width" values="0%;30%" dur="1s" repeatCount="freeze" />
       </path>

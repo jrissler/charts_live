@@ -1,7 +1,7 @@
 <div class="lc-live-stacked-bar-component">
   <%= legend(@rectangles, @chart.colors) %>
   <figure>
-    <svg class="chart--hor-bar" aria-labelledby="chartTitle" role="group" width="100%" height="<%= viewbox_height(@rectangles) %>" style="overflow: visible;">
+    <svg class="chart--hor-bar" aria-labelledby="chartTitle" role="group" width="100%" height={viewbox_height(@rectangles)} style="overflow: visible;">
       <title id="chartTitle"><%= Chart.title(@chart) %></title>
 
       <%= render "_bar_labels.html", chart: @chart %>
