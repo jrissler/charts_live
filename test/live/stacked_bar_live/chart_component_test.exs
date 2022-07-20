@@ -4,10 +4,12 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponentTest do
   import Phoenix.LiveViewTest
   use ExUnit.Case
 
-  alias ChartsLive.Live.StackedBarLive.ChartComponent
-  alias Charts.Axes.{MagnitudeAxis, BaseAxes}
-  alias Charts.{BaseChart, BaseDatum}
+  alias Charts.Axes.BaseAxes
+  alias Charts.Axes.MagnitudeAxis
   alias Charts.BarChart.Dataset
+  alias Charts.BaseChart
+  alias Charts.BaseDatum
+  alias ChartsLive.Live.StackedBarLive.ChartComponent
 
   @endpoint Endpoint
 

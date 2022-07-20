@@ -5,8 +5,8 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponent do
 
   use Phoenix.LiveComponent
 
-  alias ChartsLive.StackedBarView
   alias Charts.StackedBarChart
+  alias ChartsLive.StackedBarView
 
   def update(assigns, socket) do
     x_axis = assigns.chart.dataset.axes.magnitude_axis
