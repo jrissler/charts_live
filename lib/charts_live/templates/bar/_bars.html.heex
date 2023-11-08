@@ -15,7 +15,7 @@
         fill={color_to_fill(Chart.colors(@chart), bar.fill_color)}
         style="transition: all 1s ease;">
           <animate attributeName="width" values="0%;30%" dur="1s" repeatCount="freeze" />
-          <title><%= bar.label %></title>
+          <title><%= bar.value %></title>
       </path>
     </g>
   <% end %>
