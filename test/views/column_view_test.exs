@@ -42,8 +42,7 @@ defmodule ChartsLive.ColumnViewTest do
         magnitude_axis: %MagnitudeAxis{
           min: 0,
           max: 2500,
-          label: "$",
-          grid_lines: &__MODULE__.grid_line_fun/2
+          label: "$"
         }
       }
 
@@ -60,8 +59,7 @@ defmodule ChartsLive.ColumnViewTest do
           min: 0,
           max: 10_000_000,
           label: "$",
-          format: :abbreviated,
-          grid_lines: &__MODULE__.grid_line_fun/2
+          format: :abbreviated
         }
       }
 

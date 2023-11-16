@@ -6,6 +6,9 @@ defmodule ChartsLive.StackedBarViewTest do
   import ChartsLive.StackedBarView
   import Phoenix.HTML, only: [safe_to_string: 1]
 
+  alias Charts.Axes.BaseAxes
+  alias Charts.Axes.MagnitudeAxis
+  alias Charts.BarChart.Dataset
   alias Charts.BaseChart
 
   test "viewbox_height/1 should return viewbox height" do
@@ -18,8 +21,28 @@ defmodule ChartsLive.StackedBarViewTest do
       grid_lines = [140, 280]
       offsetter = fn grid_line -> 100 * grid_line / 2500 end
 
-      assert safe_to_string(x_axis_labels(chart, grid_lines, offsetter)) ==
+      assert safe_to_string(x_axis_labels(chart, grid_lines, offsetter, nil)) ==
                "<svg class=\"lines__x-labels\" height=\"8%\" id=\"a-title-xlabels\" offset=\"0\" style=\"overflow: visible;\" width=\"84%\" x=\"5%\" y=\"92%\"><svg height=\"100%\" style=\"overflow: visible;\" width=\"20%\" x=\"5.6%\" y=\"0%\"><svg height=\"100%\" width=\"100%\" x=\"0\" y=\"0\"><text alignment-baseline=\"middle\" text-anchor=\"start\" x=\"50%\" y=\"50%\">140</text></svg></svg><svg height=\"100%\" style=\"overflow: visible;\" width=\"20%\" x=\"11.2%\" y=\"0%\"><svg height=\"100%\" width=\"100%\" x=\"0\" y=\"0\"><text alignment-baseline=\"middle\" text-anchor=\"start\" x=\"50%\" y=\"50%\">280</text></svg></svg></svg>"
+    end
+
+    test "should return svg with formatted values" do
+      axes = %BaseAxes{
+        magnitude_axis: %MagnitudeAxis{
+          min: 0,
+          max: 2_000_000,
+          label: "$",
+          format: :abbreviated
+        }
+      }
+
+      chart = %BaseChart{title: "a title", dataset: %Dataset{axes: axes, data: []}}
+
+      grid_lines = [1_100_000, 678_910, 7000, 10]
+
+      offsetter = fn grid_line -> 100 * grid_line / 2_000_000 end
+
+      assert safe_to_string(x_axis_labels(chart, grid_lines, offsetter, :abbreviated)) ==
+               "<svg class=\"lines__x-labels\" height=\"8%\" id=\"a-title-xlabels\" offset=\"0\" style=\"overflow: visible;\" width=\"84%\" x=\"5%\" y=\"92%\"><svg height=\"100%\" style=\"overflow: visible;\" width=\"20%\" x=\"55.0%\" y=\"0%\"><svg height=\"100%\" width=\"100%\" x=\"0\" y=\"0\"><text alignment-baseline=\"middle\" text-anchor=\"start\" x=\"50%\" y=\"50%\">$1.1m</text></svg></svg><svg height=\"100%\" style=\"overflow: visible;\" width=\"20%\" x=\"33.9455%\" y=\"0%\"><svg height=\"100%\" width=\"100%\" x=\"0\" y=\"0\"><text alignment-baseline=\"middle\" text-anchor=\"start\" x=\"50%\" y=\"50%\">$67.9k</text></svg></svg><svg height=\"100%\" style=\"overflow: visible;\" width=\"20%\" x=\"0.35%\" y=\"0%\"><svg height=\"100%\" width=\"100%\" x=\"0\" y=\"0\"><text alignment-baseline=\"middle\" text-anchor=\"start\" x=\"50%\" y=\"50%\">$7.0k</text></svg></svg><svg height=\"100%\" style=\"overflow: visible;\" width=\"20%\" x=\"5.0e-4%\" y=\"0%\"><svg height=\"100%\" width=\"100%\" x=\"0\" y=\"0\"><text alignment-baseline=\"middle\" text-anchor=\"start\" x=\"50%\" y=\"50%\">$10</text></svg></svg></svg>"
     end
   end
 
