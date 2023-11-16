@@ -27,7 +27,8 @@ defmodule ChartsLive.ChartBehavior do
 
       use Phoenix.HTML
 
-      alias Charts.{Chart, Gradient}
+      alias Charts.Chart
+      alias Charts.Gradient
 
       @doc """
       Returns color to fill from Gradient (matches svg def) or static color
@@ -63,8 +64,9 @@ defmodule ChartsLive.ChartBehavior do
       @doc """
       The function used to generate Y Axis labels
       """
-      def y_axis_labels(chart, grid_lines, offsetter) do
-        content = Enum.map(grid_lines, &y_axis_rows(&1, offsetter))
+      def y_axis_labels(chart, grid_lines, offsetter, format \\ nil) do
+        y_axis_label = y_axis_label(chart)
+        content = Enum.map(grid_lines, &y_axis_rows(&1, offsetter, y_axis_label, format))
 
         content_tag(:svg, content,
           id: svg_id(chart, "ylabels"),
@@ -115,10 +117,10 @@ defmodule ChartsLive.ChartBehavior do
       # , do_flush: 1
       # defoverridable init: 1
 
-      defp y_axis_rows(grid_line, offsetter) do
+      defp y_axis_rows(grid_line, offsetter, y_axis_label, format) do
         content_tag(:svg, x: "0", y: "#{offsetter.(grid_line)}%", height: "20px", width: "100%") do
           content_tag(:svg, width: "100%", height: "100%") do
-            content_tag(:text, grid_line,
+            content_tag(:text, "#{y_axis_label}#{formatted_grid_line(grid_line, format)}",
               x: "50%",
               y: "50%",
               font_size: "14px",
@@ -127,6 +129,32 @@ defmodule ChartsLive.ChartBehavior do
             )
           end
         end
+      end
+
+      defp formatted_grid_line(grid_line_value, nil), do: grid_line_value
+
+      defp formatted_grid_line(grid_line_value, :abbreviated) do
+        cond do
+          grid_line_value >= 1_000_000 ->
+            to_abbreviated_string(grid_line_value, 1_000_000, "m")
+
+          grid_line_value >= 100_000 ->
+            to_abbreviated_string(grid_line_value, 10_000, "k")
+
+          grid_line_value >= 999 ->
+            to_abbreviated_string(grid_line_value, 1_000, "k")
+
+          true ->
+            grid_line_value
+        end
+      end
+
+      defp to_abbreviated_string(value, divisor, append_value \\ "") do
+        value
+        |> Kernel./(divisor)
+        |> Float.round(1)
+        |> Float.to_string()
+        |> Kernel.<>(append_value)
       end
 
       defp linear_gradient(
@@ -139,6 +167,28 @@ defmodule ChartsLive.ChartBehavior do
           ]
         end
       end
+
+      defp y_axis_label(%Charts.BaseChart{
+             dataset: %Charts.ColumnChart.Dataset{
+               axes: %Charts.Axes.BaseAxes{
+                 magnitude_axis: %Charts.Axes.MagnitudeAxis{label: label}
+               }
+             }
+           }),
+           do: label
+
+      defp y_axis_label(%Charts.BaseChart{
+             dataset: %Charts.ColumnChart.Dataset{
+               axes: %Charts.Axes.XYAxes{
+                 y: %Charts.Axes.MagnitudeAxis{
+                   label: label
+                 }
+               }
+             }
+           }),
+           do: label
+
+      defp y_axis_label(_), do: nil
     end
   end
 end

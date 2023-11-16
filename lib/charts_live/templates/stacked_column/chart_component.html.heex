@@ -3,7 +3,7 @@
   <%= legend(@rectangles, @chart.colors) %>
   <figure>
     <svg id={svg_id(@chart, "chart")} class="columns__chart" aria-labelledby="chartTitle" role="group" width="100%" height="100%" viewBox="0 0 700 400">
-      <%= y_axis_labels(@chart, @grid_lines, @grid_line_offsetter) %>
+      <%= y_axis_labels(@chart, @grid_lines, @grid_line_offsetter, @y_axis_format) %>
       <%= x_axis_labels(@chart, @columns) %>
 
       <svg id={svg_id(@chart, "graph")} class="columns__graph" width="90%" height="92%" x="10%" y="0">

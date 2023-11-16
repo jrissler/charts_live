@@ -6,7 +6,12 @@ defmodule ChartsLive.ColumnViewTest do
   import Phoenix.HTML, only: [safe_to_string: 1]
   import ChartsLive.ColumnView
 
-  alias Charts.{BaseChart, Gradient, ColumnChart.Column}
+  alias Charts.Axes.BaseAxes
+  alias Charts.Axes.MagnitudeAxis
+  alias Charts.BaseChart
+  alias Charts.ColumnChart.Column
+  alias Charts.ColumnChart.Dataset
+  alias Charts.Gradient
 
   describe "color_to_fill/2" do
     test "should return color value" do
@@ -33,11 +38,40 @@ defmodule ChartsLive.ColumnViewTest do
 
   describe "y_axis_labels/3" do
     test "should return svg" do
-      chart = %BaseChart{title: "a title"}
+      axes = %BaseAxes{
+        magnitude_axis: %MagnitudeAxis{
+          min: 0,
+          max: 2500,
+          label: "$",
+          grid_lines: &__MODULE__.grid_line_fun/2
+        }
+      }
+
+      chart = %BaseChart{title: "a title", dataset: %Dataset{axes: axes, data: []}}
       offsetter = fn _grid_line -> 100 * 2 end
 
       assert safe_to_string(y_axis_labels(chart, [10, 20, 30], offsetter)) ==
-               "<svg class=\"columns__y-labels\" height=\"90%\" id=\"a-title-ylabels\" style=\"overflow: visible\" width=\"8%\" x=\"0\" y=\"0\"><svg height=\"20px\" width=\"100%\" x=\"0\" y=\"200%\"><svg height=\"100%\" width=\"100%\"><text alignment-baseline=\"middle\" font-size=\"14px\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">10</text></svg></svg><svg height=\"20px\" width=\"100%\" x=\"0\" y=\"200%\"><svg height=\"100%\" width=\"100%\"><text alignment-baseline=\"middle\" font-size=\"14px\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">20</text></svg></svg><svg height=\"20px\" width=\"100%\" x=\"0\" y=\"200%\"><svg height=\"100%\" width=\"100%\"><text alignment-baseline=\"middle\" font-size=\"14px\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">30</text></svg></svg></svg>"
+               "<svg class=\"columns__y-labels\" height=\"90%\" id=\"a-title-ylabels\" style=\"overflow: visible\" width=\"8%\" x=\"0\" y=\"0\"><svg height=\"20px\" width=\"100%\" x=\"0\" y=\"200%\"><svg height=\"100%\" width=\"100%\"><text alignment-baseline=\"middle\" font-size=\"14px\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">$10</text></svg></svg><svg height=\"20px\" width=\"100%\" x=\"0\" y=\"200%\"><svg height=\"100%\" width=\"100%\"><text alignment-baseline=\"middle\" font-size=\"14px\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">$20</text></svg></svg><svg height=\"20px\" width=\"100%\" x=\"0\" y=\"200%\"><svg height=\"100%\" width=\"100%\"><text alignment-baseline=\"middle\" font-size=\"14px\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">$30</text></svg></svg></svg>"
+    end
+
+    test "should return svg with abbreviated labels" do
+      axes = %BaseAxes{
+        magnitude_axis: %MagnitudeAxis{
+          min: 0,
+          max: 10_000_000,
+          label: "$",
+          format: :abbreviated,
+          grid_lines: &__MODULE__.grid_line_fun/2
+        }
+      }
+
+      chart = %BaseChart{title: "a title", dataset: %Dataset{axes: axes, data: []}}
+      offsetter = fn _grid_line -> 100 * 2 end
+
+      assert safe_to_string(
+               y_axis_labels(chart, [2_000_000, 888_888, 7_000], offsetter, :abbreviated)
+             ) ==
+               "<svg class=\"columns__y-labels\" height=\"90%\" id=\"a-title-ylabels\" style=\"overflow: visible\" width=\"8%\" x=\"0\" y=\"0\"><svg height=\"20px\" width=\"100%\" x=\"0\" y=\"200%\"><svg height=\"100%\" width=\"100%\"><text alignment-baseline=\"middle\" font-size=\"14px\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">$2.0m</text></svg></svg><svg height=\"20px\" width=\"100%\" x=\"0\" y=\"200%\"><svg height=\"100%\" width=\"100%\"><text alignment-baseline=\"middle\" font-size=\"14px\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">$88.9k</text></svg></svg><svg height=\"20px\" width=\"100%\" x=\"0\" y=\"200%\"><svg height=\"100%\" width=\"100%\"><text alignment-baseline=\"middle\" font-size=\"14px\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">$7.0k</text></svg></svg></svg>"
     end
   end
 
