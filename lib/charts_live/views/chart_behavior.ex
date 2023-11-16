@@ -10,12 +10,16 @@ defmodule ChartsLive.ChartBehavior do
   @callback color_defs(%BaseChart{}) :: String.t()
   @callback y_axis_labels(%BaseChart{}, list(), function()) :: String.t()
   @callback y_axis_background_lines(%BaseChart{}, list(), function()) :: String.t()
+  @callback formatted_grid_line(Integer.t(), Atom.t() | nil) :: String.t()
+  @callback axis_label(%BaseChart{}) :: String.t()
 
   @optional_callbacks color_to_fill: 2,
                       svg_id: 2,
                       color_defs: 1,
                       y_axis_labels: 3,
-                      y_axis_background_lines: 3
+                      y_axis_background_lines: 3,
+                      formatted_grid_line: 2,
+                      axis_label: 1
 
   defmacro __using__(_) do
     quote do
@@ -65,7 +69,7 @@ defmodule ChartsLive.ChartBehavior do
       The function used to generate Y Axis labels
       """
       def y_axis_labels(chart, grid_lines, offsetter, format \\ nil) do
-        y_axis_label = y_axis_label(chart)
+        y_axis_label = axis_label(chart)
         content = Enum.map(grid_lines, &y_axis_rows(&1, offsetter, y_axis_label, format))
 
         content_tag(:svg, content,
@@ -95,6 +99,72 @@ defmodule ChartsLive.ChartBehavior do
           ]
         end
       end
+
+      @doc """
+      The function used to generate formatted values for integers
+      """
+      def formatted_grid_line(grid_line_value, nil), do: grid_line_value
+
+      def formatted_grid_line(grid_line_value, :abbreviated) do
+        cond do
+          grid_line_value >= 1_000_000 ->
+            to_abbreviated_string(grid_line_value, 1_000_000, "m")
+
+          grid_line_value >= 100_000 ->
+            to_abbreviated_string(grid_line_value, 10_000, "k")
+
+          grid_line_value >= 999 ->
+            to_abbreviated_string(grid_line_value, 1_000, "k")
+
+          true ->
+            grid_line_value
+        end
+      end
+
+      @doc """
+      The function used to pull label from a given chart
+      """
+      def axis_label(%Charts.BaseChart{
+            dataset: %Charts.BarChart.Dataset{
+              axes: %Charts.Axes.BaseAxes{
+                magnitude_axis: %Charts.Axes.MagnitudeAxis{label: label}
+              }
+            }
+          }),
+          do: label
+
+      def axis_label(%Charts.BaseChart{
+            dataset: %Charts.ColumnChart.Dataset{
+              axes: %Charts.Axes.BaseAxes{
+                magnitude_axis: %Charts.Axes.MagnitudeAxis{label: label}
+              }
+            }
+          }),
+          do: label
+
+      def axis_label(%Charts.BaseChart{
+            dataset: %Charts.ColumnChart.Dataset{
+              axes: %Charts.Axes.XYAxes{
+                y: %Charts.Axes.MagnitudeAxis{
+                  label: label
+                }
+              }
+            }
+          }),
+          do: label
+
+      def axis_label(%Charts.BaseChart{
+            dataset: %Charts.ColumnChart.Dataset{
+              axes: %Charts.Axes.XYAxes{
+                y: %Charts.Axes.MagnitudeAxis{
+                  label: label
+                }
+              }
+            }
+          }),
+          do: label
+
+      def axis_label(_), do: nil
 
       defp x_axis_background_line(line, offsetter) do
         offset = "#{offsetter.(line)}%"
@@ -131,24 +201,6 @@ defmodule ChartsLive.ChartBehavior do
         end
       end
 
-      defp formatted_grid_line(grid_line_value, nil), do: grid_line_value
-
-      defp formatted_grid_line(grid_line_value, :abbreviated) do
-        cond do
-          grid_line_value >= 1_000_000 ->
-            to_abbreviated_string(grid_line_value, 1_000_000, "m")
-
-          grid_line_value >= 100_000 ->
-            to_abbreviated_string(grid_line_value, 10_000, "k")
-
-          grid_line_value >= 999 ->
-            to_abbreviated_string(grid_line_value, 1_000, "k")
-
-          true ->
-            grid_line_value
-        end
-      end
-
       defp to_abbreviated_string(value, divisor, append_value \\ "") do
         value
         |> Kernel./(divisor)
@@ -167,28 +219,6 @@ defmodule ChartsLive.ChartBehavior do
           ]
         end
       end
-
-      defp y_axis_label(%Charts.BaseChart{
-             dataset: %Charts.ColumnChart.Dataset{
-               axes: %Charts.Axes.BaseAxes{
-                 magnitude_axis: %Charts.Axes.MagnitudeAxis{label: label}
-               }
-             }
-           }),
-           do: label
-
-      defp y_axis_label(%Charts.BaseChart{
-             dataset: %Charts.ColumnChart.Dataset{
-               axes: %Charts.Axes.XYAxes{
-                 y: %Charts.Axes.MagnitudeAxis{
-                   label: label
-                 }
-               }
-             }
-           }),
-           do: label
-
-      defp y_axis_label(_), do: nil
     end
   end
 end

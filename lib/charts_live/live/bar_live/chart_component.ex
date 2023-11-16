@@ -5,8 +5,8 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
 
   use Phoenix.LiveComponent
 
-  alias ChartsLive.BarView
   alias Charts.BarChart
+  alias ChartsLive.BarView
 
   def update(assigns, socket) do
     x_axis = assigns.chart.dataset.axes.magnitude_axis
@@ -24,6 +24,7 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
       |> assign(:bars, BarChart.bars(assigns.chart))
       |> assign(:grid_lines, grid_lines)
       |> assign(:offsetter, grid_line_offsetter)
+      |> assign(:x_axis_format, x_axis.format)
 
     {:ok, socket}
   end
