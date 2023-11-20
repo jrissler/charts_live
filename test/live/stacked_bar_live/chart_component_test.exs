@@ -13,11 +13,9 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponentTest do
 
   @endpoint Endpoint
 
-  test "renders card component" do
-    title = "random title"
-
+  test "renders chart component" do
     base_chart = %BaseChart{
-      title: title,
+      title: "random title",
       colors: %{
         blueberry: "#4096EE",
         orange: "#FF7400"
@@ -50,8 +48,49 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponentTest do
 
     rendered_component = render_component(ChartComponent, %{chart: base_chart})
 
-    assert rendered_component =~ title
     assert rendered_component =~ ~s(class="lc-live-stacked-bar-component")
+    assert rendered_component =~ ~s(50</title>)
+  end
+
+  test "renders chart component with abbreviated hover text" do
+    base_chart = %BaseChart{
+      title: "random title",
+      colors: %{
+        blueberry: "#4096EE",
+        orange: "#FF7400"
+      },
+      dataset: %Dataset{
+        axes: %BaseAxes{
+          magnitude_axis: %MagnitudeAxis{
+            max: 75,
+            min: 0,
+            label: "$",
+            format: :abbreviated
+          }
+        },
+        data: [
+          %BaseDatum{
+            name: "2010",
+            values: %{
+              blueberry: 1_000,
+              orange: 5_000
+            }
+          },
+          %BaseDatum{
+            name: "2011",
+            values: %{
+              blueberry: 50_000,
+              orange: 40_000
+            }
+          }
+        ]
+      }
+    }
+
+    rendered_component = render_component(ChartComponent, %{chart: base_chart})
+
+    assert rendered_component =~ ~s(class="lc-live-stacked-bar-component")
+    assert rendered_component =~ ~s($50,000.00</title>)
   end
 
   def grid_line_fun({min, max}, _step) do

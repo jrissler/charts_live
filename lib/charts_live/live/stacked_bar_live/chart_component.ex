@@ -26,6 +26,7 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponent do
       |> assign(:grid_lines, grid_lines)
       |> assign(:offsetter, grid_line_offsetter)
       |> assign(:x_axis_format, x_axis.format)
+      |> assign(:x_axis_value_label, x_axis.label)
 
     {:ok, socket}
   end
