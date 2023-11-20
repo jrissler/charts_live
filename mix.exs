@@ -37,6 +37,7 @@ defmodule ChartsLive.MixProject do
       {:ex_doc, "~> 0.28.5", only: :dev, runtime: false},
       {:excoveralls, "~> 0.15.0", only: :test},
       {:phoenix_live_view, "~> 0.18.2"},
+      {:number, "~> 1.0.4"},
       {:charts, github: "jrissler/charts"}
       # {:charts, path: "../charts"}
     ]
