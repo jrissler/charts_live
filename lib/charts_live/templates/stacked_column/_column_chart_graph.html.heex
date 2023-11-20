@@ -8,7 +8,7 @@
         width={width / 2}
         fill={@chart.colors[fill_color]}
       >
-      <title><%= label %></title>
+      <title><%= formatted_hover_text(label, @format, @label) %></title>
       </rect>
     <% end %>
   </g>

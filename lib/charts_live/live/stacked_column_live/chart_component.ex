@@ -22,6 +22,7 @@ defmodule ChartsLive.Live.StackedColumnLive.ChartComponent do
       |> assign(:grid_lines, grid_lines)
       |> assign(:grid_line_offsetter, grid_line_offsetter)
       |> assign(:y_axis_format, y_axis.format)
+      |> assign(:y_axis_value_label, y_axis.label)
 
     {:ok, socket}
   end

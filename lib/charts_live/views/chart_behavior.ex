@@ -12,6 +12,7 @@ defmodule ChartsLive.ChartBehavior do
   @callback y_axis_background_lines(%BaseChart{}, list(), function()) :: String.t()
   @callback formatted_grid_line(Integer.t(), Atom.t() | nil) :: String.t()
   @callback axis_label(%BaseChart{}) :: String.t()
+  @callback formatted_hover_text(Integer.t(), Atom.t(), String.t()) :: String.t()
 
   @optional_callbacks color_to_fill: 2,
                       svg_id: 2,
@@ -19,7 +20,8 @@ defmodule ChartsLive.ChartBehavior do
                       y_axis_labels: 3,
                       y_axis_background_lines: 3,
                       formatted_grid_line: 2,
-                      axis_label: 1
+                      axis_label: 1,
+                      formatted_hover_text: 3
 
   defmacro __using__(_) do
     quote do
@@ -120,6 +122,14 @@ defmodule ChartsLive.ChartBehavior do
             grid_line_value
         end
       end
+
+      @doc """
+      The function used to generate formatted values for a charts hover values
+      """
+      def formatted_hover_text(value, nil, _value_label), do: value
+
+      def formatted_hover_text(value, :abbreviated, value_label),
+        do: value_label <> Number.Delimit.number_to_delimited(value)
 
       @doc """
       The function used to pull label from a given chart

@@ -8,7 +8,7 @@
 
       <svg id={svg_id(@chart, "graph")} class="columns__graph" width="90%" height="92%" x="10%" y="0">
         <%= x_axis_background_lines(@chart, @grid_lines, @grid_line_offsetter) %>
-        <%= render "_column_chart_graph.html", chart: @chart, rectangles: @rectangles %>
+        <%= render "_column_chart_graph.html", chart: @chart, rectangles: @rectangles, format: @y_axis_format, label: @y_axis_value_label %>
       </svg>
 
       <%= color_defs(@chart) %>

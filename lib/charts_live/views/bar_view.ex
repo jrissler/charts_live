@@ -26,14 +26,6 @@ defmodule ChartsLive.BarView do
     )
   end
 
-  @doc """
-  The function used to generate formatted values for a charts hover values
-  """
-  def formatted_hover_text(value, nil, _value_label), do: value
-
-  def formatted_hover_text(value, :abbreviated, value_label),
-    do: value_label <> Number.Delimit.number_to_delimited(value)
-
   defp x_axis_column_label(line, offsetter, label, label_format) do
     content_tag(:svg,
       x: "#{offsetter.(line)}%",
