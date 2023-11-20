@@ -26,6 +26,36 @@ defmodule ChartsLive.BarView do
     )
   end
 
+  @doc """
+  The function used to generate formatted values for a charts hover values
+  """
+  def formatted_hover_text(value, nil, _value_label), do: value
+
+  def formatted_hover_text(value, :abbreviated, value_label) do
+    cond do
+      value >= 1_000_000 ->
+        formatted_string(value, 1_000_000, value_label, "m")
+
+      value >= 100_000 ->
+        formatted_string(value, 10_000, value_label, "k")
+
+      value >= 999 ->
+        formatted_string(value, 1_000, value_label, "k")
+
+      true ->
+        value
+    end
+  end
+
+  defp formatted_string(value, divisor, prepend_value, append_value) do
+    value
+    |> Kernel./(divisor)
+    |> Float.round(1)
+    |> Float.to_string()
+
+    "#{prepend_value}#{value}#{append_value}"
+  end
+
   defp x_axis_column_label(line, offsetter, label, label_format) do
     content_tag(:svg,
       x: "#{offsetter.(line)}%",
