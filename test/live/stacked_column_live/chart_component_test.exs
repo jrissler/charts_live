@@ -55,7 +55,7 @@ defmodule ChartsLive.Live.StackedColumnLive.ChartComponentTest do
     assert rendered_component =~ ~s(2010</text>)
   end
 
-  test "renders chart component with " do
+  test "renders chart component with abbreviated hover text" do
     title = "random title"
 
     base_chart = %BaseChart{
