@@ -90,7 +90,7 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponentTest do
     rendered_component = render_component(ChartComponent, %{chart: base_chart})
 
     assert rendered_component =~ ~s(class="lc-live-stacked-bar-component")
-    assert rendered_component =~ ~s($50,000.00</title>)
+    assert rendered_component =~ ~s($50,000</title>)
   end
 
   def grid_line_fun({min, max}, _step) do

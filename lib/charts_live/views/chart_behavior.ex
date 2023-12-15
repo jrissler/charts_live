@@ -129,7 +129,7 @@ defmodule ChartsLive.ChartBehavior do
       def formatted_hover_text(value, nil, _value_label), do: value
 
       def formatted_hover_text(value, :abbreviated, value_label),
-        do: value_label <> Number.Delimit.number_to_delimited(value)
+        do: value_label <> Number.Delimit.number_to_delimited(value, precision: 0)
 
       @doc """
       The function used to pull label from a given chart
