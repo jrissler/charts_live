@@ -113,7 +113,7 @@ defmodule ChartsLive.ChartBehavior do
             to_abbreviated_string(grid_line_value, 1_000_000, "m")
 
           grid_line_value >= 100_000 ->
-            to_abbreviated_string(grid_line_value, 10_000, "k")
+            to_abbreviated_string(grid_line_value, 100_000, "k")
 
           grid_line_value >= 999 ->
             to_abbreviated_string(grid_line_value, 1_000, "k")
