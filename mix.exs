@@ -37,9 +37,8 @@ defmodule ChartsLive.MixProject do
       {:ex_doc, "~> 0.31.0", only: :dev, runtime: false},
       {:excoveralls, "~> 0.18.0", only: :test},
       {:phoenix_live_view, "~> 0.20.2"},
-      # remove phoenix_html_helpers + phoenix_view once all older helpers are removed
+      # remove phoenix_html_helpers once all older helpers are removed
       {:phoenix_html_helpers, "~> 1.0.1"},
-      {:phoenix_view, "~> 2.0.3"},
       {:number, "~> 1.0.4"},
       {:charts, github: "jrissler/charts"}
       # {:charts, path: "../charts"}
