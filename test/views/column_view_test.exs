@@ -2,14 +2,13 @@ defmodule ChartsLive.ColumnViewTest do
   @moduledoc false
 
   use ExUnit.Case
+  use ChartsLive.ChartBehavior
 
   import Phoenix.HTML, only: [safe_to_string: 1]
-  import ChartsLive.ColumnView
 
   alias Charts.Axes.BaseAxes
   alias Charts.Axes.MagnitudeAxis
   alias Charts.BaseChart
-  alias Charts.ColumnChart.Column
   alias Charts.ColumnChart.Dataset
   alias Charts.Gradient
 
@@ -70,16 +69,6 @@ defmodule ChartsLive.ColumnViewTest do
                y_axis_labels(chart, [2_000_000, 888_888, 7_000], offsetter, :abbreviated)
              ) ==
                "<svg class=\"columns__y-labels\" height=\"90%\" id=\"a-title-ylabels\" style=\"overflow: visible\" width=\"8%\" x=\"0\" y=\"0\"><svg height=\"20px\" width=\"100%\" x=\"0\" y=\"200%\"><svg height=\"100%\" width=\"100%\"><text alignment-baseline=\"middle\" font-size=\"14px\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">$2.0m</text></svg></svg><svg height=\"20px\" width=\"100%\" x=\"0\" y=\"200%\"><svg height=\"100%\" width=\"100%\"><text alignment-baseline=\"middle\" font-size=\"14px\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">$888.9k</text></svg></svg><svg height=\"20px\" width=\"100%\" x=\"0\" y=\"200%\"><svg height=\"100%\" width=\"100%\"><text alignment-baseline=\"middle\" font-size=\"14px\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">$7.0k</text></svg></svg></svg>"
-    end
-  end
-
-  describe "x_axis_labels/2" do
-    test "should return svg" do
-      chart = %BaseChart{title: "a title"}
-      columns = [%Column{label: "test"}, %Column{label: "test2"}]
-
-      assert safe_to_string(x_axis_labels(chart, columns)) ==
-               "<svg class=\"columns__x-labels\" height=\"8%\" id=\"a-title-xlabels\" width=\"90.5%\" x=\"9.5%\" y=\"92%\"><svg height=\"100%\" width=\"%\" x=\"%\" y=\"0%\"><svg height=\"100%\" width=\"100%\"><text alignment-baseline=\"middle\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">test</text></svg></svg><svg height=\"100%\" width=\"%\" x=\"%\" y=\"0%\"><svg height=\"100%\" width=\"100%\"><text alignment-baseline=\"middle\" text-anchor=\"middle\" x=\"50%\" y=\"50%\">test2</text></svg></svg></svg>"
     end
   end
 

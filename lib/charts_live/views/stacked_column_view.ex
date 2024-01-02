@@ -5,9 +5,6 @@ defmodule ChartsLive.StackedColumnView do
 
   use ChartsLive.ChartBehavior
 
-  alias Charts.Gradient
-  alias Charts.StackedColumnChart.Rectangle
-
   @doc """
   The function used to generate X Axis labels
   """

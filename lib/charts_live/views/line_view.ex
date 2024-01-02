@@ -5,7 +5,7 @@ defmodule ChartsLive.LineView do
 
   use ChartsLive.ChartBehavior
 
-  alias Charts.LineChart.{Line, Point}
+  alias Charts.LineChart.Point
 
   def svg_polyline_points([]), do: ""
 

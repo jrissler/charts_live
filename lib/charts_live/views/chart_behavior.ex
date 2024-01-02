@@ -27,14 +27,16 @@ defmodule ChartsLive.ChartBehavior do
     quote do
       @behaviour ChartsLive.ChartBehavior
 
-      use Phoenix.View,
-        root: "lib/charts_live/templates",
-        namespace: ChartsLive
-
-      use Phoenix.HTML
-
       alias Charts.Chart
       alias Charts.Gradient
+
+      ### remove once all older helpers are removed
+
+      import Phoenix.HTML
+      import Phoenix.HTML.Form
+      use PhoenixHTMLHelpers
+
+      ###
 
       @doc """
       Returns color to fill from Gradient (matches svg def) or static color

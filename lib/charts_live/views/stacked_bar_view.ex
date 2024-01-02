@@ -5,8 +5,7 @@ defmodule ChartsLive.StackedBarView do
 
   use ChartsLive.ChartBehavior
 
-  alias Charts.Gradient
-  alias Charts.StackedColumnChart.Rectangle
+  import PhoenixHTMLHelpers.Tag
 
   def viewbox_height(rectangles) do
     length(rectangles) * 12 + 170
