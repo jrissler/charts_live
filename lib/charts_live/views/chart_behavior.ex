@@ -33,8 +33,7 @@ defmodule ChartsLive.ChartBehavior do
       ### remove once all older helpers are removed
 
       import Phoenix.HTML
-      import Phoenix.HTML.Form
-      use PhoenixHTMLHelpers
+      import Phoenix.HTML.Tag
 
       ###
 
@@ -146,17 +145,6 @@ defmodule ChartsLive.ChartBehavior do
             dataset: %Charts.ColumnChart.Dataset{
               axes: %Charts.Axes.BaseAxes{
                 magnitude_axis: %Charts.Axes.MagnitudeAxis{label: label}
-              }
-            }
-          }),
-          do: label
-
-      def axis_label(%Charts.BaseChart{
-            dataset: %Charts.ColumnChart.Dataset{
-              axes: %Charts.Axes.XYAxes{
-                y: %Charts.Axes.MagnitudeAxis{
-                  label: label
-                }
               }
             }
           }),

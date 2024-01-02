@@ -9,7 +9,6 @@ defmodule ChartsLive.Live.LineLive.ChartComponent do
   alias Charts.LineChart
   alias Charts.LineChart.Line
   alias Charts.LineChart.Point
-  alias ChartsLive.LineView
 
   def update(assigns, socket) do
     x_axis = assigns.chart.dataset.axes.x
@@ -41,7 +40,7 @@ defmodule ChartsLive.Live.LineLive.ChartComponent do
         <title id="chartTitle"><%= Chart.title(@chart) %></title>
 
         <%= y_axis_labels(@chart, @y_grid_lines, @y_grid_line_offsetter) %>
-        <%= LineView.x_axis_labels(@chart, @x_grid_lines, @x_grid_line_offsetter) %>
+        <%= x_axis_labels(@chart, @x_grid_lines, @x_grid_line_offsetter) %>
 
         <svg id={svg_id(@chart, "graph")} class="line__graph" width="90%" height="92%" x="10%" y="0">
           <g id="chart-lines" class="line__lines">
@@ -70,7 +69,7 @@ defmodule ChartsLive.Live.LineLive.ChartComponent do
           <svg id={svg_id(@chart, "results")} class="line__results" width="100%" height="100%" x="0%" y="0%">
             <svg width='100%' height='100%' viewBox="0 0 1000 1000" preserveAspectRatio="none">
               <g id={svg_id(@chart, "lines")}>
-                <polyline fill="url(#grad)" stroke="url(#blue_gradient)" style="transition: all 1s ease;" stroke-width="0" points={LineView.svg_polyline_points(@points)}>
+                <polyline fill="url(#grad)" stroke="url(#blue_gradient)" style="transition: all 1s ease;" stroke-width="0" points={svg_polyline_points(@points)}>
                 </polyline>
               </g>
             </svg>
@@ -96,5 +95,49 @@ defmodule ChartsLive.Live.LineLive.ChartComponent do
       </svg>
     </figure>
     """
+  end
+
+  defp svg_polyline_points([]), do: ""
+
+  defp svg_polyline_points(points) do
+    points
+    |> Enum.map(fn %Point{x_offset: x, y_offset: y} -> "#{10 * x},#{1000 - 10 * y}" end)
+    |> List.insert_at(0, "#{hd(points).x_offset * 10},1000")
+    |> List.insert_at(-1, "#{List.last(points).x_offset * 10},1000")
+    |> Enum.join(" ")
+  end
+
+  defp x_axis_labels(chart, grid_lines, offsetter) do
+    lines = Enum.map(grid_lines, &x_axis_column_label(&1, offsetter))
+
+    content_tag(:svg, lines,
+      id: svg_id(chart, "xlabels"),
+      class: "lines__x-labels",
+      width: "90%",
+      height: "8%",
+      y: "92%",
+      x: "1%",
+      style: "overflow: visible;",
+      offset: "0"
+    )
+  end
+
+  defp x_axis_column_label(line, offsetter) do
+    content_tag(:svg,
+      x: "#{offsetter.(line)}%",
+      y: "0%",
+      height: "100%",
+      width: "20%",
+      style: "overflow: visible;"
+    ) do
+      content_tag(:svg, width: "100%", height: "100%", x: "0", y: "0") do
+        content_tag(:text, line,
+          x: "50%",
+          y: "50%",
+          alignment_baseline: "middle",
+          text_anchor: "middle"
+        )
+      end
+    end
   end
 end

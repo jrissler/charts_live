@@ -3,8 +3,8 @@ defmodule ChartsLive.Live.ColumnLive.ChartComponent do
   Bar Chart Component
   """
 
-  use Phoenix.LiveComponent
   use ChartsLive.ChartBehavior
+  use Phoenix.LiveComponent
 
   alias Charts.ColumnChart
   alias Charts.ColumnChart.Column

@@ -7,7 +7,6 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
   use Phoenix.LiveComponent
 
   alias Charts.BarChart
-  alias ChartsLive.BarView
 
   def update(assigns, socket) do
     x_axis = assigns.chart.dataset.axes.magnitude_axis
@@ -58,7 +57,7 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
               </g>
             <% end %>
           </svg>
-          <%= BarView.x_axis_labels(@chart, @grid_lines, @offsetter, @x_axis_format) %>
+          <%= x_axis_labels(@chart, @grid_lines, @offsetter, @x_axis_format) %>
           <svg class="" width="90%" height="92%" x="10%" y="0">
             <g class="y-line">
               <line x1="0%" y1="0%" x2="0%" y2="100%" stroke="#efefef" stroke-width="2px" stroke-linecap="round" />
@@ -96,5 +95,40 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
       </figure>
     </div>
     """
+  end
+
+  defp x_axis_labels(chart, grid_lines, offsetter, label_format) do
+    label = axis_label(chart)
+    lines = Enum.map(grid_lines, &x_axis_column_label(&1, offsetter, label, label_format))
+
+    content_tag(:svg, lines,
+      id: svg_id(chart, "xlabels"),
+      class: "lines__x-labels",
+      width: "90%",
+      height: "8%",
+      y: "92%",
+      x: "1%",
+      style: "overflow: visible;",
+      offset: "0"
+    )
+  end
+
+  defp x_axis_column_label(line, offsetter, label, label_format) do
+    content_tag(:svg,
+      x: "#{offsetter.(line)}%",
+      y: "0%",
+      height: "100%",
+      width: "20%",
+      style: "overflow: visible;"
+    ) do
+      content_tag(:svg, width: "100%", height: "100%", x: "0", y: "0") do
+        content_tag(:text, "#{label}#{formatted_grid_line(line, label_format)}",
+          x: "50%",
+          y: "50%",
+          alignment_baseline: "middle",
+          text_anchor: "middle"
+        )
+      end
+    end
   end
 end

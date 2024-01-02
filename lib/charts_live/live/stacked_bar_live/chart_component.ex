@@ -4,12 +4,12 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponent do
   """
 
   use ChartsLive.ChartBehavior
+
   use Phoenix.LiveComponent
 
   alias Charts.Gradient
   alias Charts.StackedBarChart
   alias Charts.StackedColumnChart.Rectangle
-  alias ChartsLive.StackedBarView
 
   def update(assigns, socket) do
     x_axis = assigns.chart.dataset.axes.magnitude_axis
@@ -37,9 +37,9 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponent do
   def render(assigns) do
     ~H"""
     <div class="lc-live-stacked-bar-component">
-      <%= StackedBarView.legend(@rectangles, @chart.colors) %>
+      <%= legend(@rectangles, @chart.colors) %>
       <figure>
-        <svg class="chart--hor-bar" aria-labelledby="chartTitle" role="group" width="100%" height={StackedBarView.viewbox_height(@rectangles)} style="overflow: visible;">
+        <svg class="chart--hor-bar" aria-labelledby="chartTitle" role="group" width="100%" height={viewbox_height(@rectangles)} style="overflow: visible;">
           <svg id={svg_id(@chart, "ylabels")} class="bar__y-labels" width="14%" height="92%" y="0" x="0">
             <%= for %Charts.StackedBarChart.MultiBar{label: label, height: height, offset: offset} <- Charts.StackedBarChart.rows(@chart) do %>
               <svg x="0" y={"#{offset}%"} height={"#{height}%"} width="100%">
@@ -50,7 +50,7 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponent do
             <% end %>
           </svg>
 
-          <%= StackedBarView.x_axis_labels(@chart, @grid_lines, @offsetter, @x_axis_format) %>
+          <%= x_axis_labels(@chart, @grid_lines, @offsetter, @x_axis_format) %>
           <svg class="" width="84%" height="92%" x="14%" y="0">
             <g class="y-line">
               <line x1="0%" y1="0%" x2="0%" y2="100%" stroke="#efefef" stroke-width="2px" stroke-linecap="round" />
@@ -83,5 +83,74 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponent do
       </figure>
     </div>
     """
+  end
+
+  defp viewbox_height(rectangles) do
+    length(rectangles) * 12 + 170
+  end
+
+  defp x_axis_labels(chart, grid_lines, offsetter, label_format) do
+    label = axis_label(chart)
+    lines = Enum.map(grid_lines, &x_axis_column_label(&1, offsetter, label, label_format))
+
+    content_tag(:svg, lines,
+      id: svg_id(chart, "xlabels"),
+      class: "lines__x-labels",
+      width: "84%",
+      height: "8%",
+      y: "92%",
+      x: "5%",
+      style: "overflow: visible;",
+      offset: "0"
+    )
+  end
+
+  # TODO: add to behavior, shared with stacked column
+  defp legend(rectangles, colors) do
+    legend_items =
+      rectangles
+      |> Enum.map(& &1.fill_color)
+      |> Enum.uniq()
+      |> Enum.map(&legend_content(&1, colors))
+      |> Enum.reverse()
+
+    content_tag(:dl, legend_items, style: "margin-left: 10%; float: right;")
+  end
+
+  defp legend_content(color_label, colors) do
+    [
+      content_tag(:dt, "",
+        style:
+          "background-color: #{colors[color_label]}; display: inline-block; height: 10px; width: 20px; vertical-align: middle;"
+      ),
+      content_tag(:dd, color_to_label(color_label),
+        style: "display: inline-block; margin: 0px 10px 0 6px; padding-bottom: 0;"
+      )
+    ]
+  end
+
+  defp color_to_label(atom_color) do
+    atom_color
+    |> Atom.to_string()
+    |> String.capitalize()
+  end
+
+  defp x_axis_column_label(line, offsetter, label, label_format) do
+    content_tag(:svg,
+      x: "#{offsetter.(line)}%",
+      y: "0%",
+      height: "100%",
+      width: "20%",
+      style: "overflow: visible;"
+    ) do
+      content_tag(:svg, width: "100%", height: "100%", x: "0", y: "0") do
+        content_tag(:text, "#{label}#{formatted_grid_line(line, label_format)}",
+          x: "50%",
+          y: "50%",
+          alignment_baseline: "middle",
+          text_anchor: "start"
+        )
+      end
+    end
   end
 end
