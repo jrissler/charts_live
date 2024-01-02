@@ -35,28 +35,6 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
     <div class="lc-live-bar-component">
       <figure>
         <svg class="chart--hor-bar" aria-labelledby="chartTitle" role="group" width="100%" height="100%" viewBox="0 0 600 400" style="overflow: visible;">
-          <svg id={"#{svg_id(@chart, "bars")}"} width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <%= for {bar, index} <- Enum.with_index(@bars) do %>
-              <g class="bar">
-                <path id={"#{index}"}
-                  class="bar"
-                  d={"
-                    M0,#{bar.bar_offset},
-                    h#{bar.bar_width}
-                    q2,0 2,2
-                    v#{bar.bar_height - 4}
-                    q0,2 -2,2
-                    h-#{bar.bar_width},
-                    z
-                  "}
-                  fill={color_to_fill(Chart.colors(@chart), bar.fill_color)}
-                  style="transition: all 1s ease;">
-                    <animate attributeName="width" values="0%;30%" dur="1s" repeatCount="freeze" />
-                    <title><%= formatted_hover_text(bar.value, @x_axis_format, @x_axis_value_label) %></title>
-                </path>
-              </g>
-            <% end %>
-          </svg>
           <%= x_axis_labels(@chart, @grid_lines, @offsetter, @x_axis_format) %>
           <svg class="" width="90%" height="92%" x="10%" y="0">
             <g class="y-line">
@@ -67,6 +45,28 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
                 <line x1={"#{offset}%"} y1="0%" x2={"#{offset}%"} y2="100%" stroke="#efefef" stroke-width="2px" stroke-linecap="round" />
               <% end %>
             </g>
+            <svg id={"#{svg_id(@chart, "bars")}"} width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <%= for {bar, index} <- Enum.with_index(@bars) do %>
+                <g class="bar">
+                  <path id={"#{index}"}
+                    class="bar"
+                    d={"
+                      M0,#{bar.bar_offset},
+                      h#{bar.bar_width}
+                      q2,0 2,2
+                      v#{bar.bar_height - 4}
+                      q0,2 -2,2
+                      h-#{bar.bar_width},
+                      z
+                    "}
+                    fill={color_to_fill(Chart.colors(@chart), bar.fill_color)}
+                    style="transition: all 1s ease;">
+                      <animate attributeName="width" values="0%;30%" dur="1s" repeatCount="freeze" />
+                      <title><%= formatted_hover_text(bar.value, @x_axis_format, @x_axis_value_label) %></title>
+                  </path>
+                </g>
+              <% end %>
+            </svg>
           </svg>
           <%= color_defs(@chart) %>
         </svg>
