@@ -37,6 +37,7 @@ defmodule ChartsLive.StackedBarView do
       |> Enum.map(& &1.fill_color)
       |> Enum.uniq()
       |> Enum.map(&legend_content(&1, colors))
+      |> Enum.reverse()
 
     content_tag(:dl, legend_items, style: "margin-left: 10%; float: right;")
   end
