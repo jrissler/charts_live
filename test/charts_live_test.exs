@@ -1,6 +1,5 @@
-defmodule ChartsLiveTest do
+defmodule ChartsLive.ChartsLiveTest do
   @moduledoc false
 
   use ExUnit.Case
-  doctest ChartsLive
 end

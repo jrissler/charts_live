@@ -39,6 +39,7 @@ defmodule ChartsLive.Live.ProgressLive.ChartComponent do
         </svg>
 
         <circle r="16" cx="21" cy="21" fill="transparent" stroke={color_to_fill(Chart.colors(@chart), :gray)} stroke-width="5" stroke-dasharray="565.48" stroke-dashoffset="0"></circle>
+
         <circle
             class="counter__value"
             cx="21"
