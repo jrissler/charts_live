@@ -34,18 +34,18 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
     ~H"""
     <div class="lc-live-bar-component">
       <figure>
-        <svg class="chart--hor-bar" aria-labelledby="chartTitle" role="group" width="100%" height="100%" viewBox="0 0 600 400" style="overflow: visible;">
-          <svg id={svg_id(@chart, "ylabels")} class="bar__y-labels" width="10%" height="92%" y="0" x="0">
+        <svg class="chart--hor-bar" aria-labelledby="chartTitle" role="group" width="100%" height={viewbox_height(@bars)} style="overflow: visible;">
+          <svg id={svg_id(@chart, "ylabels")} class="bar__y-labels" width="14%" height="92%" y="0" x="0">
             <%= for %Charts.BarChart.Bar{label: label, height: height, offset: offset} <- Charts.BarChart.bars(@chart) do %>
               <svg x="0" y={"#{offset}%"} height={"#{height}%"} width="100%">
                   <svg width="100%" height="100%">
-                  <text x="50%" y="50%" font-size="10px" alignment-baseline="middle" text-anchor="middle"><%= label %></text>
+                  <text x="50%" y="50%" font-size="12px" alignment-baseline="middle" text-anchor="middle"><%= label %></text>
                 </svg>
               </svg>
             <% end %>
           </svg>
           <%= x_axis_labels(@chart, @grid_lines, @offsetter, @x_axis_format) %>
-          <svg class="" width="90%" height="92%" x="10%" y="0">
+          <svg class="" width="84%" height="92%" x="14%" y="0">
             <g class="y-line">
               <line x1="0%" y1="0%" x2="0%" y2="100%" stroke="#efefef" stroke-width="2px" stroke-linecap="round" />
               <line x1="0%" y1="100%" x2="100%" y2="100%" stroke="#efefef" stroke-width="2px" stroke-linecap="round" />
@@ -84,6 +84,10 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
     """
   end
 
+  defp viewbox_height(bars) do
+    length(bars) * 22 + 170
+  end
+
   defp x_axis_labels(chart, grid_lines, offsetter, label_format) do
     label = axis_label(chart)
     lines = Enum.map(grid_lines, &x_axis_column_label(&1, offsetter, label, label_format))
@@ -91,10 +95,10 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
     content_tag(:svg, lines,
       id: svg_id(chart, "xlabels"),
       class: "lines__x-labels",
-      width: "90%",
+      width: "84%",
       height: "8%",
       y: "92%",
-      x: "1%",
+      x: "5%",
       style: "overflow: visible;",
       offset: "0"
     )
