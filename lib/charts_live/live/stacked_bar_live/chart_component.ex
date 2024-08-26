@@ -39,7 +39,7 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponent do
     <div class="lc-live-stacked-bar-component">
       <%= legend(@rectangles, @chart.colors) %>
       <figure>
-        <svg class="chart--hor-bar" aria-labelledby="chartTitle" role="group" width="100%" height={viewbox_height(@rectangles)} style="overflow: visible;">
+        <svg class="chart--hor-bar" aria-labelledby="chartTitle" role="group" width="100%" height={viewbox_height(@rows)} style="overflow: visible;">
           <svg id={svg_id(@chart, "ylabels")} class="bar__y-labels" width="14%" height="92%" y="0" x="0">
             <%= for %Charts.StackedBarChart.MultiBar{label: label, height: height, offset: offset} <- Charts.StackedBarChart.rows(@chart) do %>
               <svg x="0" y={"#{offset}%"} height={"#{height}%"} width="100%">
@@ -85,8 +85,8 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponent do
     """
   end
 
-  defp viewbox_height(rectangles) do
-    length(rectangles) * 12 + 170
+  defp viewbox_height(rows) do
+    length(rows) * 16 + 170
   end
 
   defp x_axis_labels(chart, grid_lines, offsetter, label_format) do
