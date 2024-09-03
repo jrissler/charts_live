@@ -53,7 +53,7 @@ defmodule ChartsLive.Live.DonutLive.ChartComponentTest do
   test "renders chart component" do
     rendered_component = render_component(ChartComponent, %{chart: @chart})
 
-    assert rendered_component =~ ~s(class="lc-live-stacked-bar-component")
-    assert rendered_component =~ ~s(50</title>)
+    assert rendered_component =~ ~s(class="lc-live-donut-component")
+    assert rendered_component =~ ~s(50\)</title>)
   end
 end

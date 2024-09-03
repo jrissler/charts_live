@@ -51,7 +51,7 @@ defmodule ChartsLive.Live.DonutLive.ChartComponent do
       <figcaption class="figure-key">
         <ul class="figure-key-list" aria-hidden="true" role="presentation">
           <%= for %DonutSlice{label: label, fill_color: fill_color} <- @slices do %>
-            <li>
+            <li phx-click="chart-legend-select" phx-value-legend-selected-label={label}>
               <span class="shape-circle" style={figure_color(@chart.colors(), fill_color)}></span>
               <%= label %>
             </li>
