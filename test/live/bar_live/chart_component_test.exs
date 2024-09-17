@@ -51,6 +51,26 @@ defmodule ChartsLive.Live.BarLive.ChartComponentTest do
     assert rendered_component =~ ~s($2.5k</text>)
   end
 
+  test "renders chart component with appended_label" do
+    title = "random title"
+
+    axes = %BaseAxes{
+      magnitude_axis: %MagnitudeAxis{
+        min: 0,
+        max: 2500,
+        appended_label: "%"
+      }
+    }
+
+    base_chart = %BaseChart{title: title, dataset: %Dataset{axes: axes, data: []}}
+
+    rendered_component = render_component(ChartComponent, %{chart: base_chart})
+
+    # assert rendered_component =~ title
+    assert rendered_component =~ ~s(class="lc-live-bar-component")
+    assert rendered_component =~ ~s(2500%</text>)
+  end
+
   def grid_line_fun({min, max}, _step) do
     Enum.take_every(min..max, 500)
   end

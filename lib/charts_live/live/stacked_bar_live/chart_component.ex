@@ -90,8 +90,8 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponent do
   end
 
   defp x_axis_labels(chart, grid_lines, offsetter, label_format) do
-    label = axis_label(chart)
-    lines = Enum.map(grid_lines, &x_axis_column_label(&1, offsetter, label, label_format))
+    %{label: y_axis_label, appended_label: y_axis_appended_label} = axis_label(chart)
+    lines = Enum.map(grid_lines, &x_axis_column_label(&1, offsetter, y_axis_label, y_axis_appended_label, label_format))
 
     content_tag(:svg, lines,
       id: svg_id(chart, "xlabels"),
@@ -119,13 +119,8 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponent do
 
   defp legend_content(color_label, colors) do
     [
-      content_tag(:dt, "",
-        style:
-          "background-color: #{colors[color_label]}; display: inline-block; height: 10px; width: 20px; vertical-align: middle;"
-      ),
-      content_tag(:dd, color_to_label(color_label),
-        style: "display: inline-block; margin: 0px 10px 0 6px; padding-bottom: 0;"
-      )
+      content_tag(:dt, "", style: "background-color: #{colors[color_label]}; display: inline-block; height: 10px; width: 20px; vertical-align: middle;"),
+      content_tag(:dd, color_to_label(color_label), style: "display: inline-block; margin: 0px 10px 0 6px; padding-bottom: 0;")
     ]
   end
 
@@ -135,7 +130,7 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponent do
     |> String.capitalize()
   end
 
-  defp x_axis_column_label(line, offsetter, label, label_format) do
+  defp x_axis_column_label(line, offsetter, label, appended_label, label_format) do
     content_tag(:svg,
       x: "#{offsetter.(line)}%",
       y: "0%",
@@ -144,7 +139,7 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponent do
       style: "overflow: visible;"
     ) do
       content_tag(:svg, width: "100%", height: "100%", x: "0", y: "0") do
-        content_tag(:text, "#{label}#{formatted_grid_line(line, label_format)}",
+        content_tag(:text, "#{label}#{formatted_grid_line(line, label_format)}#{appended_label}",
           x: "50%",
           y: "50%",
           alignment_baseline: "middle",

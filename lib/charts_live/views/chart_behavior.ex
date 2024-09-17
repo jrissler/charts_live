@@ -72,8 +72,8 @@ defmodule ChartsLive.ChartBehavior do
       The function used to generate Y Axis labels
       """
       def y_axis_labels(chart, grid_lines, offsetter, format \\ nil) do
-        y_axis_label = axis_label(chart)
-        content = Enum.map(grid_lines, &y_axis_rows(&1, offsetter, y_axis_label, format))
+        %{label: y_axis_label, appended_label: y_axis_appended_label} = axis_label(chart)
+        content = Enum.map(grid_lines, &y_axis_rows(&1, offsetter, y_axis_label, y_axis_appended_label, format))
 
         content_tag(:svg, content,
           id: svg_id(chart, "ylabels"),
@@ -135,33 +135,40 @@ defmodule ChartsLive.ChartBehavior do
       def axis_label(%Charts.BaseChart{
             dataset: %Charts.BarChart.Dataset{
               axes: %Charts.Axes.BaseAxes{
-                magnitude_axis: %Charts.Axes.MagnitudeAxis{label: label}
+                magnitude_axis: %Charts.Axes.MagnitudeAxis{
+                  label: label,
+                  appended_label: appended_label
+                }
               }
             }
           }),
-          do: label
+          do: %{label: label, appended_label: appended_label}
 
       def axis_label(%Charts.BaseChart{
             dataset: %Charts.ColumnChart.Dataset{
               axes: %Charts.Axes.BaseAxes{
-                magnitude_axis: %Charts.Axes.MagnitudeAxis{label: label}
+                magnitude_axis: %Charts.Axes.MagnitudeAxis{
+                  label: label,
+                  appended_label: appended_label
+                }
               }
             }
           }),
-          do: label
+          do: %{label: label, appended_label: appended_label}
 
       def axis_label(%Charts.BaseChart{
             dataset: %Charts.ColumnChart.Dataset{
               axes: %Charts.Axes.XYAxes{
                 y: %Charts.Axes.MagnitudeAxis{
-                  label: label
+                  label: label,
+                  appended_label: appended_label
                 }
               }
             }
           }),
-          do: label
+          do: %{label: label, appended_label: appended_label}
 
-      def axis_label(_), do: nil
+      def axis_label(_), do: %{label: nil, appended_label: nil}
 
       defp x_axis_background_line(line, offsetter) do
         offset = "#{offsetter.(line)}%"
@@ -184,10 +191,10 @@ defmodule ChartsLive.ChartBehavior do
       # , do_flush: 1
       # defoverridable init: 1
 
-      defp y_axis_rows(grid_line, offsetter, y_axis_label, format) do
+      defp y_axis_rows(grid_line, offsetter, y_axis_label, y_axis_appended_label, format) do
         content_tag(:svg, x: "0", y: "#{offsetter.(grid_line)}%", height: "20px", width: "100%") do
           content_tag(:svg, width: "100%", height: "100%") do
-            content_tag(:text, "#{y_axis_label}#{formatted_grid_line(grid_line, format)}",
+            content_tag(:text, "#{y_axis_label}#{formatted_grid_line(grid_line, format)}#{y_axis_appended_label}",
               x: "50%",
               y: "50%",
               font_size: "14px",
@@ -206,9 +213,7 @@ defmodule ChartsLive.ChartBehavior do
         |> Kernel.<>(append_value)
       end
 
-      defp linear_gradient(
-             {name, %Charts.Gradient{start_color: start_color, end_color: end_color}}
-           ) do
+      defp linear_gradient({name, %Charts.Gradient{start_color: start_color, end_color: end_color}}) do
         content_tag(:linearGradient, id: name) do
           [
             content_tag(:stop, "", stop_color: start_color, offset: "0%"),
