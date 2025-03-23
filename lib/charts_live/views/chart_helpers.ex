@@ -37,8 +37,8 @@ defmodule ChartsLive.ChartHelpers do
   def color_defs(assigns) do
     ~H"""
     <defs>
-      <%= for {_name, %Charts.Gradient{start_color: start_color, end_color: end_color}} <- Chart.gradient_colors(@chart) do %>
-        <linearGradient>
+      <%= for {name, %Charts.Gradient{start_color: start_color, end_color: end_color}} <- Chart.gradient_colors(@chart) do %>
+        <linearGradient id={name}>
           <stop stop-color={start_color} offset="0%" />
           <stop stop-color={end_color} offset="100%" />
         </linearGradient>
