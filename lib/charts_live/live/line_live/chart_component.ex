@@ -3,9 +3,11 @@ defmodule ChartsLive.Live.LineLive.ChartComponent do
   Line Chart Component
   """
 
-  use ChartsLive.ChartBehavior
   use Phoenix.LiveComponent
 
+  import ChartsLive.ChartHelpers
+
+  alias Charts.Chart
   alias Charts.LineChart
   alias Charts.LineChart.Line
   alias Charts.LineChart.Point
@@ -36,11 +38,10 @@ defmodule ChartsLive.Live.LineLive.ChartComponent do
   def render(assigns) do
     ~H"""
     <figure class="lc-live-line-component">
-      <svg id={svg_id(@chart, "chart")} class="line__chart" aria-labelledby="chartTitle" role="group" width="100%" height="100%" viewBox="0 0 700 400" style="overflow: visible;">
-        <title id="chartTitle"><%= Chart.title(@chart) %></title>
-
-        <%= y_axis_labels(@chart, @y_grid_lines, @y_grid_line_offsetter) %>
-        <%= x_axis_labels(@chart, @x_grid_lines, @x_grid_line_offsetter) %>
+      <svg id={svg_id(@chart, "chart")} class="line__chart" role="group" width="100%" height="100%" viewBox="0 0 700 400" style="overflow: visible;">
+        <title><%= Chart.title(@chart) %></title>
+        <.y_axis_labels chart={@chart} grid_lines={@y_grid_lines} offsetter={@y_grid_line_offsetter} format={nil} />
+        <.x_axis_labels chart={@chart} grid_lines={@x_grid_lines} offsetter={@x_grid_line_offsetter}/>
 
         <svg id={svg_id(@chart, "graph")} class="line__graph" width="90%" height="92%" x="10%" y="0">
           <g id="chart-lines" class="line__lines">
@@ -52,7 +53,7 @@ defmodule ChartsLive.Live.LineLive.ChartComponent do
               <line x1={"#{offset}%"} y1="0%" x2={"#{offset}%"} y2="100%" stroke="#efefef" stroke-width="2px" stroke-linecap="round" />
               <% end %>
             </g>
-            <%= x_axis_background_lines(@chart, @x_grid_lines, @x_grid_line_offsetter) %>
+            <.x_axis_background_lines chart={@chart} grid_lines={@x_grid_lines} offsetter={@x_grid_line_offsetter} />
             <%= for %Line{start: %{x_offset: x1, y_offset: y1}, end: %{x_offset: x2, y_offset: y2}} <- @lines do %>
               <line
                 x1={"#{x1}%"}
@@ -76,7 +77,7 @@ defmodule ChartsLive.Live.LineLive.ChartComponent do
             <g id={svg_id(@chart, "dots")} class="line_dots">
               <%= for %Point{x_offset: x_offset, y_offset: y_offset, fill_color: fill_color} <- @points do %>
                 <circle
-                  fill={color_to_fill(@chart.colors(), fill_color)}
+                  fill={color_to_fill(@chart.colors, fill_color)}
                   cx={"#{x_offset}%"}
                   cy={"#{100 - y_offset}%"}
                   r="6">
@@ -90,7 +91,7 @@ defmodule ChartsLive.Live.LineLive.ChartComponent do
             <stop offset="0%" style="stop-color:rgba(54, 209, 220, .5);stop-opacity:1"></stop>
             <stop offset="100%" style="stop-color:white;stop-opacity:0"></stop>
           </linearGradient>
-          <%= color_defs(@chart) %>
+          <.color_defs chart={@chart} />
         </svg>
       </svg>
     </figure>
@@ -107,37 +108,19 @@ defmodule ChartsLive.Live.LineLive.ChartComponent do
     |> Enum.join(" ")
   end
 
-  defp x_axis_labels(chart, grid_lines, offsetter) do
-    lines = Enum.map(grid_lines, &x_axis_column_label(&1, offsetter))
-
-    content_tag(:svg, lines,
-      id: svg_id(chart, "xlabels"),
-      class: "lines__x-labels",
-      width: "90%",
-      height: "8%",
-      y: "92%",
-      x: "1%",
-      style: "overflow: visible;",
-      offset: "0"
-    )
-  end
-
-  defp x_axis_column_label(line, offsetter) do
-    content_tag(:svg,
-      x: "#{offsetter.(line)}%",
-      y: "0%",
-      height: "100%",
-      width: "20%",
-      style: "overflow: visible;"
-    ) do
-      content_tag(:svg, width: "100%", height: "100%", x: "0", y: "0") do
-        content_tag(:text, line,
-          x: "50%",
-          y: "50%",
-          alignment_baseline: "middle",
-          text_anchor: "middle"
-        )
-      end
-    end
+  def x_axis_labels(assigns) do
+    ~H"""
+    <svg id={svg_id(@chart, "xlabels")} class="lines__x-labels" width="90%" height="8%" y="92%" x="1%" style="overflow: visible;" offset="0">
+      <%= for line <- @grid_lines do %>
+        <svg x={@offsetter.(line)}% y="0%" height="100%" width="20%" style="overflow: visible;">
+          <svg width="100%" height="100%" x="0" y="0">
+            <text x="50%" y="50%" alignment_baseline="middle" text_anchor="middle">
+              <%= line %>
+            </text>
+          </svg>
+        </svg>
+      <% end %>
+    </svg>
+    """
   end
 end

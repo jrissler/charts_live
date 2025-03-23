@@ -3,10 +3,12 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
   Bar Chart Component
   """
 
-  use ChartsLive.ChartBehavior
   use Phoenix.LiveComponent
 
+  import ChartsLive.ChartHelpers
+
   alias Charts.BarChart
+  alias Charts.Chart
 
   def update(assigns, socket) do
     x_axis = assigns.chart.dataset.axes.magnitude_axis
@@ -34,7 +36,7 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
     ~H"""
     <div class="lc-live-bar-component">
       <figure>
-        <svg class="chart--hor-bar" aria-labelledby="chartTitle" role="group" width="100%" height={viewbox_height(@bars)} style="overflow: visible;">
+        <svg class="chart--hor-bar" role="group" width="100%" height={viewbox_height(@bars)} style="overflow: visible;">
           <svg id={svg_id(@chart, "ylabels")} class="bar__y-labels" width="14%" height="92%" y="0" x="0">
             <%= for %Charts.BarChart.Bar{label: label, height: height, offset: offset} <- Charts.BarChart.bars(@chart) do %>
               <svg x="0" y={"#{offset}%"} height={"#{height}%"} width="100%">
@@ -44,7 +46,7 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
               </svg>
             <% end %>
           </svg>
-          <%= x_axis_labels(@chart, @grid_lines, @offsetter, @x_axis_format) %>
+          <.x_axis_labels chart={@chart} grid_lines={@grid_lines} offsetter={@offsetter} label_format={@x_axis_format} />
           <svg class="" width="84%" height="92%" x="14%" y="0">
             <g class="y-line">
               <line x1="0%" y1="0%" x2="0%" y2="100%" stroke="#efefef" stroke-width="2px" stroke-linecap="round" />
@@ -55,9 +57,9 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
               <% end %>
             </g>
             <svg id={"#{svg_id(@chart, "bars")}"} width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <%= for {bar, index} <- Enum.with_index(@bars) do %>
+              <%= for {bar, _index} <- Enum.with_index(@bars) do %>
                 <g class="bar">
-                  <path id={"#{index}"}
+                  <path
                     class="bar"
                     d={"
                       M0,#{bar.bar_offset},
@@ -77,7 +79,7 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
               <% end %>
             </svg>
           </svg>
-          <%= color_defs(@chart) %>
+          <.color_defs chart={@chart} />
         </svg>
       </figure>
     </div>
@@ -88,38 +90,19 @@ defmodule ChartsLive.Live.BarLive.ChartComponent do
     length(bars) * 22 + 170
   end
 
-  defp x_axis_labels(chart, grid_lines, offsetter, label_format) do
-    %{label: y_axis_label, appended_label: y_axis_appended_label} = axis_label(chart)
-    lines = Enum.map(grid_lines, &x_axis_column_label(&1, offsetter, y_axis_label, y_axis_appended_label, label_format))
-
-    content_tag(:svg, lines,
-      id: svg_id(chart, "xlabels"),
-      class: "lines__x-labels",
-      width: "84%",
-      height: "8%",
-      y: "92%",
-      x: "5%",
-      style: "overflow: visible;",
-      offset: "0"
-    )
-  end
-
-  defp x_axis_column_label(line, offsetter, label, appended_label, label_format) do
-    content_tag(:svg,
-      x: "#{offsetter.(line)}%",
-      y: "0%",
-      height: "100%",
-      width: "20%",
-      style: "overflow: visible;"
-    ) do
-      content_tag(:svg, width: "100%", height: "100%", x: "0", y: "0") do
-        content_tag(:text, "#{label}#{formatted_grid_line(line, label_format)}#{appended_label}",
-          x: "50%",
-          y: "50%",
-          alignment_baseline: "middle",
-          text_anchor: "middle"
-        )
-      end
-    end
+  def x_axis_labels(assigns) do
+    ~H"""
+    <svg id={svg_id(@chart, "xlabels")} class="lines__x-labels" width="84%" height="8%" y="92%" x="5%" style="overflow: visible;" offset="0">
+      <%= for line <- @grid_lines do %>
+        <svg x={"#{@offsetter.(line)}%"} y="0%" height="100%" width="20%" style="overflow: visible;">
+          <svg width="100%" height="100%" x="0" y="0">
+            <text x="50%" y="50%" alignment_baseline="middle" text_anchor="middle">
+              <%= "#{axis_label(@chart).label}#{formatted_grid_line(line, @label_format)}#{axis_label(@chart).appended_label}" %>
+            </text>
+          </svg>
+        </svg>
+      <% end %>
+    </svg>
+    """
   end
 end

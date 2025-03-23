@@ -4,10 +4,11 @@ defmodule ChartsLive.Live.LineLive.ChartComponentTest do
   import Phoenix.LiveViewTest
   use ExUnit.Case
 
-  alias ChartsLive.Live.LineLive.ChartComponent
-  alias Charts.Axes.{MagnitudeAxis, XYAxes}
+  alias Charts.Axes.MagnitudeAxis
+  alias Charts.Axes.XYAxes
   alias Charts.BaseChart
   alias Charts.ColumnChart.Dataset
+  alias ChartsLive.Live.LineLive.ChartComponent
 
   @endpoint Endpoint
 

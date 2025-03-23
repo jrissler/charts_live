@@ -3,10 +3,10 @@ defmodule ChartsLive.Live.StackedColumnLive.ChartComponent do
   Stacked Bar Chart Component
   """
 
-  use ChartsLive.ChartBehavior
   use Phoenix.LiveComponent
 
-  alias Charts.Gradient
+  import ChartsLive.ChartHelpers
+
   alias Charts.StackedColumnChart
   alias Charts.StackedColumnChart.Rectangle
 
@@ -32,14 +32,14 @@ defmodule ChartsLive.Live.StackedColumnLive.ChartComponent do
   def render(assigns) do
     ~H"""
     <div class="lc-live-stacked-bar-component">
-      <%= legend(@rectangles, @chart.colors) %>
+      <.legend rectangles={@rectangles} colors={@chart.colors}/>
       <figure>
-        <svg id={svg_id(@chart, "chart")} class="columns__chart" aria-labelledby="chartTitle" role="group" width="100%" height="100%" viewBox="0 0 700 400">
-          <%= y_axis_labels(@chart, @grid_lines, @grid_line_offsetter, @y_axis_format) %>
-          <%= x_axis_labels(@chart, @columns) %>
+        <svg id={svg_id(@chart, "chart")} class="columns__chart" role="group" width="100%" height="100%" viewBox="0 0 700 400">
+          <.y_axis_labels chart={@chart} grid_lines={@grid_lines} offsetter={@grid_line_offsetter} format={@y_axis_format}/>
+          <.x_axis_labels chart={@chart} columns={@columns} />
 
           <svg id={svg_id(@chart, "graph")} class="columns__graph" width="90%" height="92%" x="10%" y="0">
-            <%= x_axis_background_lines(@chart, @grid_lines, @grid_line_offsetter) %>
+            <.x_axis_background_lines chart={@chart} grid_lines={@grid_lines} offsetter={@grid_line_offsetter} />
             <svg id={svg_id(@chart, "results")} class="columns__results" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
               <g>
                 <%= for %Rectangle{width: width, x_offset: x_offset, y_offset: y_offset, height: height, fill_color: fill_color, label: label} <- @rectangles do %>
@@ -57,59 +57,40 @@ defmodule ChartsLive.Live.StackedColumnLive.ChartComponent do
             </svg>
           </svg>
 
-          <%= color_defs(@chart) %>
+          <.color_defs chart={@chart} />
         </svg>
       </figure>
     </div>
     """
   end
 
-  defp x_axis_labels(chart, columns) do
-    columns = Enum.map(columns, &x_axis_column_label(&1))
-
-    content_tag(:svg, columns,
-      id: svg_id(chart, "xlabels"),
-      class: "columns__x-labels",
-      width: "90.5%",
-      height: "8%",
-      y: "92%",
-      x: "9.5%"
-    )
+  def x_axis_labels(assigns) do
+    ~H"""
+    <svg id={svg_id(@chart, "xlabels")} class="columns__x-labels" width="90.5%" height="8%" y="92%" x="9.5%">
+      <%= for column <- @columns do %>
+        <svg x={"#{column.offset}%"} y="0%" height="100%" width={"#{column.width}%"}>
+          <svg width="100%" height="100%">
+            <text x="50%" y="50%" alignment-baseline="middle" text-anchor="middle">
+              <%= column.label %>
+            </text>
+          </svg>
+        </svg>
+      <% end %>
+    </svg>
+    """
   end
 
-  defp x_axis_column_label(column) do
-    content_tag(:svg, x: "#{column.offset}%", y: "0%", height: "100%", width: "#{column.width}%") do
-      content_tag(:svg, width: "100%", height: "100%") do
-        content_tag(:text, column.label,
-          x: "50%",
-          y: "50%",
-          alignment_baseline: "middle",
-          text_anchor: "middle"
-        )
-      end
-    end
-  end
-
-  defp legend(rectangles, colors) do
-    legend_items =
-      rectangles
-      |> Enum.map(& &1.fill_color)
-      |> Enum.uniq()
-      |> Enum.map(&legend_content(&1, colors))
-
-    content_tag(:dl, legend_items, style: "margin-left: 10%; float: right;")
-  end
-
-  defp legend_content(color_label, colors) do
-    [
-      content_tag(:dt, "",
-        style:
-          "background-color: #{colors[color_label]}; display: inline-block; height: 10px; width: 20px; vertical-align: middle;"
-      ),
-      content_tag(:dd, color_to_label(color_label),
-        style: "display: inline-block; margin: 0px 10px 0 6px; padding-bottom: 0;"
-      )
-    ]
+  def legend(assigns) do
+    ~H"""
+    <dl style="margin-left: 10%; float: right;">
+      <%= for color_label <- Enum.uniq(Enum.map(@rectangles, & &1.fill_color)) do %>
+        <dt style={"background-color: #{@colors[color_label]} display: inline-block; height: 10px; width: 20px; vertical-align: middle;"}></dt>
+        <dd style="display: inline-block; margin: 0px 10px 0 6px; padding-bottom: 0;">
+          <%= color_to_label(color_label) %>
+        </dd>
+      <% end %>
+    </dl>
+    """
   end
 
   defp color_to_label(atom_color) do

@@ -3,11 +3,13 @@ defmodule ChartsLive.Live.DonutLive.ChartComponent do
   Donut Chart Component
   """
 
-  use ChartsLive.ChartBehavior
   use Phoenix.LiveComponent
+
+  import ChartsLive.ChartHelpers
 
   alias Charts.DonutChart
   alias Charts.DonutChart.DonutSlice
+  alias Charts.Gradient
 
   def update(assigns, socket) do
     socket =
@@ -22,7 +24,7 @@ defmodule ChartsLive.Live.DonutLive.ChartComponent do
     ~H"""
     <figure>
       <div class="lc-live-donut-component">
-        <svg id={svg_id(@chart, "chart")} class="donut" aria-labelledby="chartTitle" role="group" width="100%" height="100%" viewBox="0 0 42 42">
+        <svg id={svg_id(@chart, "chart")} class="donut" role="group" width="100%" height="100%" viewBox="0 0 42 42">
 
           <!-- background -->
           <circle class="donut-hole" cx="21" cy="21" r="15.91549430918954" fill="#fff" role="presentation" pointer-events="none;"></circle>
@@ -30,7 +32,7 @@ defmodule ChartsLive.Live.DonutLive.ChartComponent do
 
           <%= for %DonutSlice{value: value, label: label, fill_color: fill_color, stroke_dasharray: stroke_dasharray, stroke_dashoffset: stroke_dashoffset} <- @slices do %>
             <g>
-              <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke={color_to_fill(@chart.colors(), fill_color)} stroke-width="3" stroke-dasharray={stroke_dasharray} stroke-dashoffset={stroke_dashoffset} aria-labelledby={"donut-segment-#{value}-title donut-segment-#{value}-desc"} pointer-events="visibleStroke">
+              <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke={color_to_fill(@chart.colors, fill_color)} stroke-width="3" stroke-dasharray={stroke_dasharray} stroke-dashoffset={stroke_dashoffset} aria-labelledby={"donut-segment-#{value}-title donut-segment-#{value}-desc"} pointer-events="visibleStroke">
               <title><%= label %></title>
               </circle>
             </g>
@@ -44,7 +46,7 @@ defmodule ChartsLive.Live.DonutLive.ChartComponent do
               <%= @chart.title %>
             </text>
           </g>
-          <%= color_defs(@chart) %>
+          <.color_defs chart={@chart} />
         </svg>
       </div>
 
@@ -52,7 +54,7 @@ defmodule ChartsLive.Live.DonutLive.ChartComponent do
         <ul class="figure-key-list" aria-hidden="true" role="presentation">
           <%= for %DonutSlice{label: label, fill_color: fill_color} <- @slices do %>
             <li phx-click="chart-legend-select" phx-value-legend-selected-label={label}>
-              <span class="shape-circle" style={figure_color(@chart.colors(), fill_color)}></span>
+              <span class="shape-circle" style={figure_color(@chart.colors, fill_color)}></span>
               <%= label %>
             </li>
           <% end %>

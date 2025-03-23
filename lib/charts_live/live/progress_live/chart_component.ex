@@ -3,9 +3,11 @@ defmodule ChartsLive.Live.ProgressLive.ChartComponent do
   Progress Component
   """
 
-  use ChartsLive.ChartBehavior
   use Phoenix.LiveComponent
 
+  import ChartsLive.ChartHelpers
+
+  alias Charts.Chart
   alias Charts.ProgressChart
 
   def update(assigns, socket) do
@@ -21,8 +23,8 @@ defmodule ChartsLive.Live.ProgressLive.ChartComponent do
   def render(assigns) do
     ~H"""
     <figure data-testid="lc-live-progress-component">
-      <svg id={svg_id(@chart, "chart")} class="counter" aria-labelledby="chartTitle" role="group" width="100%" height="100%" viewBox="0 0 42 42">
-        <title id="chartTitle"><%= @chart.title %></title>
+      <svg id={svg_id(@chart, "chart")} class="counter" role="group" width="100%" height="100%" viewBox="0 0 42 42">
+        <title><%= @chart.title %></title>
 
       <g id={svg_id(@chart, "circle")}>
         <circle class="counter__center" cx="21" cy="21" r="16" fill="transparent"></circle>
@@ -55,7 +57,7 @@ defmodule ChartsLive.Live.ProgressLive.ChartComponent do
             <animate attributeName="stroke-dasharray" values={" 0 100;#{@progress} #{100 - @progress}"} dur="1s" repeatCount="freeze" />
           </circle>
       </g>
-      <%= color_defs(@chart) %>
+      <.color_defs chart={@chart} />
       </svg>
     </figure>
     """

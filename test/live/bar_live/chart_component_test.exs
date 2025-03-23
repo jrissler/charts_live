@@ -27,7 +27,7 @@ defmodule ChartsLive.Live.BarLive.ChartComponentTest do
 
     # assert rendered_component =~ title
     assert rendered_component =~ ~s(class="lc-live-bar-component")
-    assert rendered_component =~ ~s(2500</text>)
+    assert rendered_component =~ ~s(2500\n        </text>)
   end
 
   test "renders chart component with formatting" do
@@ -48,7 +48,7 @@ defmodule ChartsLive.Live.BarLive.ChartComponentTest do
 
     # assert rendered_component =~ title
     assert rendered_component =~ ~s(class="lc-live-bar-component")
-    assert rendered_component =~ ~s($2.5k</text>)
+    assert rendered_component =~ ~s($2.5k\n        </text>)
   end
 
   test "renders chart component with appended_label" do
@@ -68,7 +68,7 @@ defmodule ChartsLive.Live.BarLive.ChartComponentTest do
 
     # assert rendered_component =~ title
     assert rendered_component =~ ~s(class="lc-live-bar-component")
-    assert rendered_component =~ ~s(2500%</text>)
+    assert rendered_component =~ ~s(2500%\n        </text>)
   end
 
   def grid_line_fun({min, max}, _step) do
