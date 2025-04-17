@@ -84,12 +84,12 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponent do
   end
 
   defp viewbox_height(rows) do
-    length(rows) * 16 + 170
+    length(rows) * 16 + 220
   end
 
   def x_axis_labels(assigns) do
     ~H"""
-    <svg id={svg_id(@chart, "xlabels")} class="lines__x-labels" width="84%" height="8%" y="92%" x="5%" style="overflow: visible;" offset="0">
+    <svg id={svg_id(@chart, "xlabels")} class="lines__x-labels" width="84%" height="8%" y="93%" x="5%" style="overflow: visible;" offset="0">
       <%= for grid_line <- @grid_lines do %>
         <svg x={"#{@offsetter.(grid_line)}%"} y="0%" height="100%" width="20%" style="overflow: visible;">
         <svg width="100%" height="100%" x="0" y="0">
