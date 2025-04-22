@@ -201,7 +201,7 @@ defmodule ChartsLive.Live.StackedBarLive.ChartComponent do
   def legend(assigns) do
     ~H"""
     <dl style="margin-left: 10%; float: right;">
-      <%= for color_label <- @rectangles |> Enum.map(& &1.fill_color) |> Enum.uniq() |> Enum.reverse() do %>
+      <%= for color_label <- @rectangles |> Enum.map(& &1.fill_color) |> Enum.uniq() do %>
         <dt style={"background-color: #{@colors[color_label]}; display: inline-block; height: 10px; width: 20px; vertical-align: middle;"}></dt>
         <dd style="display: inline-block; margin: 0px 10px 0 6px; padding-bottom: 0;">
           <%= color_to_label(color_label) %>
