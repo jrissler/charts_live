@@ -51,8 +51,8 @@ defmodule ChartsLive.Live.StackedColumnLive.ChartComponentTest do
     rendered_component = render_component(ChartComponent, %{chart: base_chart})
 
     # assert rendered_component =~ title
-    assert rendered_component =~ ~s(class="lc-live-stacked-bar-component")
-    assert rendered_component =~ ~s(2010\n        </text>)
+    assert rendered_component =~ ~s(class="lc-live-stacked-column-component")
+    assert rendered_component =~ ~s(2010\n          </text>)
   end
 
   test "renders chart component with abbreviated hover text" do
@@ -95,8 +95,8 @@ defmodule ChartsLive.Live.StackedColumnLive.ChartComponentTest do
     rendered_component = render_component(ChartComponent, %{chart: base_chart})
 
     # assert rendered_component =~ title
-    assert rendered_component =~ ~s(class="lc-live-stacked-bar-component")
-    assert rendered_component =~ ~s(2010\n        </text>)
+    assert rendered_component =~ ~s(class="lc-live-stacked-column-component")
+    assert rendered_component =~ ~s(2010\n          </text>)
     assert rendered_component =~ ~s($50,000</title>)
   end
 
