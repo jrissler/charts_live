@@ -72,9 +72,9 @@ defmodule ChartsLive.Live.ColumnLive.ChartComponent do
     ~H"""
     <svg id={svg_id(@chart, "xlabels")} class="columns__x-labels" width="90.5%" height="8%" y="92%" x="9.5%">
       <%= for column <- @columns do %>
-        <svg x={column.offset}% y="0%" height="100%" width={column.width}%>
+        <svg x={"#{column.offset}%"} y="0%" height="100%" width={"#{column.width}%"}>
           <svg width="100%" height="100%">
-            <text x="50%" y="50%" alignment_baseline="middle" text_anchor="middle">
+            <text x="50%" y="50%" alignment-baseline="middle" text-anchor="middle">
               <%= column.label %>
             </text>
           </svg>
